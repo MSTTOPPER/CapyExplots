@@ -4,7 +4,162 @@
 <title>CapyExploits</title>
 </head>
 <body>
-<h1>Только в разработке</h1>
-<p>Как ты это нашёл?</p>
+<p>local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/MSTTOPPER/Scripts/main/CapyHubCfg"))()
+
+local Window = redzlib:MakeWindow({"CapyHub", "Universal Hub", "testando-redzLibv5.json"})
+Window:AddMinimizeButton({
+  Button = { Image = redzlib:GetIcon("folder-closed"), BackgroundTransparency = 0 },
+  Corner = { CornerRadius = UDim.new(0, 6) }
+})
+
+getgenv().TPSpeed = ModifiedTpWalkspeed
+getgenv().TPWalk = false
+local originalWalkSpeed = 16
+local originalJumpPower = 50
+local walkSpeedTimer
+local jumpPowerTimer
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local playerName = game.Players.LocalPlayer.Name
+local displayName = game.Players.LocalPlayer.DisplayName
+
+local Tab1 = Window:MakeTab({"Local-Player", "user"})
+
+Window:SelectTab(Tab1)
+local Section = Tab1:AddSection({"Local-Player"})
+
+
+local Paragraph = Tab1:AddParagraph({"Welcome " .. displayName .."", "UserName : " .. playerName .."\nDisplayName : " .. displayName ..""})
+
+Tab1:AddSlider({
+  Name = "WalkSpeed",
+  Min = 16,
+  Max = 500,
+  Increase = 1,
+  Default = 16,
+  Callback = function(Value)
+    ModifiedWalkspeed = Value
+  end    
+})
+
+Tab1:AddSlider({
+  Name = "JumpPower",
+  Min = 50,
+  Max = 500,
+  Increase = 1,
+  Default = 50,
+  ValueName = "Power",
+  Callback = function(Value)
+    ModifiedJumpPower = Value
+  end  
+})
+
+Tab1:AddSlider({
+  Name = "TpWalkSpeed",
+  Min = 0,
+  Max = 10,
+  Increase = 1,
+  Default = 0,
+  Callback = function(Value)
+    ModifiedTpWalkspeed = Value
+  end    
+})
+
+local WalkSpeedToggle = Tab1:AddToggle({
+  Name = "Enable WalkSpeed",
+  Description = "Enable/Disable WalkSpeed",
+  Default = false,
+  Callback = function(Value)
+    if Value == true then
+      walkSpeedTimer = game:GetService("RunService").Heartbeat:Connect(function()
+        LocalPlayer.Character.Humanoid.WalkSpeed = ModifiedWalkspeed
+        wait(0.5)
+      end)
+    else
+      if walkSpeedTimer then
+        walkSpeedTimer:Disconnect()
+        walkSpeedTimer = nil
+      end
+      LocalPlayer.Character.Humanoid.WalkSpeed = originalWalkSpeed
+    end
+  end  
+})
+
+local JumpPowerToggle = Tab1:AddToggle({
+  Name = "Enable JumpPower",
+  Description = "Enable/Disable JumpPower",
+  Default = false,
+  Callback = function(Value)
+    if Value == true then
+      jumpPowerTimer = game:GetService("RunService").Heartbeat:Connect(function()
+        LocalPlayer.Character.Humanoid.JumpPower = ModifiedJumpPower
+        wait(0.5)
+      end)
+    else
+      if jumpPowerTimer then
+        jumpPowerTimer:Disconnect()
+        jumpPowerTimer = nil
+      end
+      LocalPlayer.Character.Humanoid.JumpPower = originalJumpPower
+    end
+  end  
+})
+
+local TpWalkSpeedToggle = Tab1:AddToggle({
+  Name = "Enable TpWalkSpeed",
+  Description = "Enable/Disable TpWalkSpeed",
+  Default = false,
+  Callback = function(Value)
+getgenv().TPWalk = Value
+local hb = game:GetService("RunService").Heartbeat
+local player = game:GetService("Players")
+local lplr = player.LocalPlayer
+local chr = lplr.Character
+local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+while getgenv().TPWalk and hb:Wait() and chr and hum and hum.Parent do
+  if hum.MoveDirection.Magnitude > 0 then
+    if getgenv().TPSpeed and isNumber(getgenv().TPSpeed) then
+      chr:TranslateBy(hum.MoveDirection * tonumber(getgenv().TPSpeed))
+    else
+      chr:TranslateBy(hum.MoveDirection)
+    end
+  end
+end
+end
+})
+
+local InfJumpToggle = Tab1:AddToggle({
+  Name = "Infinite-Jump",
+  Description = "Jumps",
+  Default = false,
+  Callback = function(infjump)
+    getgenv().InfJ = infjump
+    game:GetService("UserInputService").JumpRequest:connect(function()
+        if InfJ == true then
+            game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+        end
+    end)
+
+  end
+})
+
+Window:SelectTab(Tab1)
+local Section = Tab1:AddSection({"Visuals"})
+
+local EspToggle = Tab1:AddToggle({
+  Name = "Esp",
+  Description = "Simple esp",
+  Default = false,
+  Callback = function(state) -- Добавляем Callback для обработки состояния переключателя
+    getgenv().enabled = state -- Toggle on/off
+    getgenv().filluseteamcolor = true -- Toggle fill color using player team color on/off
+    getgenv().outlineuseteamcolor = true -- Toggle outline color using player team color on/off
+    getgenv().fillcolor = Color3.new(0, 0, 0) -- Change fill color, no need to edit if using team color
+    getgenv().outlinecolor = Color3.new(1, 1, 1) -- Change outline color, no need to edit if using team color
+    getgenv().filltrans = 0.5 -- Change fill transparency
+    getgenv().outlinetrans = 0.5 -- Change outline transparency
+
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Vcsk/RobloxScripts/main/Highlight-ESP.lua"))()
+  end
+})</p>
 </body>
 </html>
